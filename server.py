@@ -5,6 +5,14 @@ import sys
 
 slaves = list()
 
+with open("slaves.txt", "r") as file:
+    content = file.read()
+    if(len(content.replace("\n", "")) > 0):
+        slaves = content.split("\n")
+        slaves = slaves[:-1]
+
+print(slaves)
+
 port = 1234
 ip = '127.0.0.1'
 
