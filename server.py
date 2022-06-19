@@ -52,12 +52,12 @@ def runServer(sharedArray, slaves):
                     and not decoded[1] == addr[0]):
                     command = b" "
                 sres.sendall(command)
+                sharedArray[:] = " ".encode("utf-8")
                 if(decoded[0] == "screenshot" ):
                     if decoded[1] == addr[0]:
                         receiveImage(sres)
                         img = Image.open("screenshot.png")
                         img.show()
-                        sharedArray[:] = " ".encode("utf-8")
                 sres.close()
                 #Keep list of online slaves
                 if slaves.count(addr[0]) == 0:
