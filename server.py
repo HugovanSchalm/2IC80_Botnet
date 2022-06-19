@@ -19,6 +19,7 @@ def removeSlave(slaves, ip):
 
 def receiveImage(sock):
     print("Receiving image...")
+    sleep(1)
     data = sock.recv(40960000)
     print("received data")
     print(len(data))
