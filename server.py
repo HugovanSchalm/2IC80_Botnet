@@ -11,9 +11,11 @@ import os
 port = 1234
 ip = '127.0.0.1'
 
-def removeSlave(sharedArray, ip):
+def removeSlave(slaves, ip):
+    print(slaves)
+    print(ip)
     sleep(30)
-    sharedArray.remove(ip)
+    slaves.remove(ip)
 
 def runServer(sharedArray, slaves):
     slavetimeouts = dict()
@@ -43,7 +45,7 @@ def runServer(sharedArray, slaves):
                 #Set timeout for removal of slave from list
                 if addr[0] in slavetimeouts:
                     os.kill(slavetimeouts[addr[0]].pid, SIGTERM)
-                slavetimeouts[addr[0]] = Process(removeSlave, args=(sharedArray, addr[0],))
+                slavetimeouts[addr[0]] = Process(target=removeSlave, args=(slaves, addr[0],))
                 slavetimeouts[addr[0]].start()
                     
 #Checks if an ip address is valid 
