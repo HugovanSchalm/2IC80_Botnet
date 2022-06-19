@@ -44,7 +44,8 @@ def runServer(sharedArray, slaves):
                     and not decoded[1] == addr[0]):
                     command = b" "
                 sres.sendall(command)
-                sharedArray[:] = " ".encode("utf-8")
+                if(len(decoded) == 1 or decoded[1] == addr[0]):
+                    sharedArray[:] = " ".encode("utf-8")
                 if(decoded[0] == "screenshot" ):
                     if decoded[1] == addr[0]:
                         receiveImage(sres)
