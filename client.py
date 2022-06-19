@@ -41,7 +41,7 @@ while True:
         data = s.recv(1024)
         task = data.decode('utf-8').split(" ")
         # List of current files and latest file added which we might use for some actions
-        list_of_screenshots = glob.glob('*.png')
+        list_of_screenshots = glob('*.png')
         if (len(list_of_screenshots) > 0):
             latest_file = max(list_of_screenshots, key=os.path.getctime)
 
