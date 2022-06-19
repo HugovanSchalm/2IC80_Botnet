@@ -12,16 +12,12 @@ port = 1234
 ip = '192.168.56.103'
 
 def removeSlave(slaves, ip):
-    print(slaves)
-    print(ip)
     sleep(30)
     slaves.remove(ip)
 
 def receiveImage(sock):
-    print("Receiving image...")
     sleep(1)
     data = sock.recv(40960000)
-    print("received data")
     print(len(data))
     file = open("./screenshot.png", 'wb')
     file.write(data)
@@ -42,8 +38,6 @@ def runServer(sharedArray, slaves):
                 sres, addr = s.accept()
                 data = sres.recv(1024)
                 print(addr[0])
-                print("Received a message from " + str(addr) + ":\n"
-                       + str(data))
                 command = bytearray(sharedArray)
                 decoded = command.decode('utf-8').split(" ")
                 if ((decoded[0] == "screenshot" or 
