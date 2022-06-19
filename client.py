@@ -53,6 +53,7 @@ while True:
                 print("Sending screenshot...")
                 imgbytes = file.read()
                 print("Read file")
+                print(len(imgbytes))
                 s.sendall(imgbytes)
                 print("Sent data")
                 print(s.recv(1024))
