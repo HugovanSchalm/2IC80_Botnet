@@ -18,7 +18,6 @@ def removeSlave(slaves, ip):
 def receiveImage(sock):
     sleep(1)
     data = sock.recv(40960000)
-    print(len(data))
     file = open("./screenshot.png", 'wb')
     file.write(data)
     file.close()
@@ -37,7 +36,6 @@ def runServer(sharedArray, slaves):
                 #Accept connections and send task back
                 sres, addr = s.accept()
                 data = sres.recv(1024)
-                print(addr[0])
                 command = bytearray(sharedArray)
                 decoded = command.decode('utf-8').split(" ")
                 if ((decoded[0] == "screenshot" or 
