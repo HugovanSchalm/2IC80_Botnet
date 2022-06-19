@@ -19,7 +19,7 @@ def removeSlave(slaves, ip):
 
 def receiveImage(sock):
     print("Receiving image...")
-    data = sock.recv(100000000)
+    data = sock.recv(160000000)
     print("received data")
     file = open("./screenshot.png", 'wb')
     file.write(data)
