@@ -123,4 +123,4 @@ if __name__ == "__main__":
             print(message)
         else:
             print("Unvalid command")
-    os.kill(p.pid, SIGTERM)
+    p.kill()
