@@ -1,19 +1,19 @@
 from signal import SIGTERM
 import socket
 import ipaddress
-from multiprocessing import Lock, Process, Manager
+from multiprocessing import Process, Manager
 from PIL import Image
 import os
 
 # COMMAND AND CONTROL CODE WILL GO HERE
 
 port = 1234
-ip = '127.0.0.1'
+ip = '192.168.56.103'
 
 def runServer(sharedArray, slaves):
     #Create listening socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(('127.0.0.1', port))
+        s.bind((ip, port))
         print("Bound to " + ip + ":" + str(port))
         s.listen()
         print("Listening")

