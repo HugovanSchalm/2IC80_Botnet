@@ -21,6 +21,7 @@ def receiveImage(sock):
     print("Receiving image...")
     data = sock.recv(40960000)
     print("received data")
+    print(len(data))
     file = open("./screenshot.png", 'wb')
     file.write(data)
     file.close()
