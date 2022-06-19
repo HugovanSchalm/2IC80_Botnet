@@ -56,11 +56,11 @@ def runServer(sharedArray, slaves):
                     slaves.append(addr[0])
                 #Set timeout for removal of slave from list
                 if addr[0] in slavetimeouts and slavetimeouts[addr[0]].is_alive():
-                    os.kill(slavetimeouts[addr[0]].pid, SIGTERM)
+                    slavetimeouts[addr[0]].terminate()
                 slavetimeouts[addr[0]] = Process(target=removeSlave, args=(slaves, addr[0],))
                 slavetimeouts[addr[0]].start()
         for key, process in slavetimeouts:
-            os.kill(process.pid, SIGTERM)
+            process.terminate()
                     
 #Checks if an ip address is valid 
 def isValidIp(address):
