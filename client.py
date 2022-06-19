@@ -3,8 +3,6 @@ import sys
 import selectors
 import types
 
-from async_timeout import current_task
-
 from client_keylogger import *
 import os
 import pyautogui
