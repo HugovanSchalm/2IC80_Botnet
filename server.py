@@ -45,13 +45,16 @@ def runServer(sharedArray, slaves):
                 print("Received a message from " + str(addr) + ":\n"
                        + str(data))
                 command = bytearray(sharedArray)
-                sres.sendall(command)
                 decoded = command.decode('utf-8').split(" ")
-                if(decoded[0] == "screenshot" and decoded[1] == addr[0]):
-                    receiveImage(sres)
-                    img = Image.open("screenshot.png")
-                    img.show()
-                    sharedArray[:] = " ".encode("utf-8")
+                if decoded[0] == "screenshot" and not decoded[1] == addr[0]:
+                    command = b" "
+                sres.sendall(command)
+                if(decoded[0] == "screenshot" ):
+                    if decoded[1] == addr[0]:
+                        receiveImage(sres)
+                        img = Image.open("screenshot.png")
+                        img.show()
+                        sharedArray[:] = " ".encode("utf-8")
                 sres.close()
                 #Keep list of online slaves
                 if slaves.count(addr[0]) == 0:
